@@ -61,14 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
     private double xval; // left(+100%) ~ 0 ~ right(-100%)
     private double yval; // front(+100%) ~ 0 ~ rear(-100%)
-    private double xmax = 5;    // ~9.8
-    private double ymax = 5;    // ~9.8
+    private final double XMAX = 5;    // <9.8
+    private final double YMAX = 5;    // <9.8
 
+    private final int AVENUM = 10;
     private List<Double> xave;
     private List<Double> yave;
-    private int aveNumber = 10;
 
-    // protocol
+    // Protocol
     // header           0xff
     // speed left       0~100
     // speed right      0~100
@@ -118,17 +118,17 @@ public class MainActivity extends AppCompatActivity {
 
                     double x = event.values[0];
                     if (x > 0) {
-                        // left = 9.8
-                        if (x > xmax) x = xmax;
-                        x = 100 * x / xmax;
+                        // left
+                        if (x > XMAX) x = XMAX;
+                        x = 100 * x / XMAX;
                     } else {
                         // right
-                        if (x < (-1 * xmax)) x = -1 * xmax;
-                        x = 100 * x / xmax;
+                        if (x < (-1 * XMAX)) x = -1 * XMAX;
+                        x = 100 * x / XMAX;
                     }
 
                     // averaging
-                    if (xave.size() > aveNumber) xave.remove(0);
+                    if (xave.size() > AVENUM) xave.remove(0);
                     xave.add(x);
                     x = 0;
                     for (i = 0; i < xave.size(); i++) {
@@ -139,15 +139,15 @@ public class MainActivity extends AppCompatActivity {
                     double y = event.values[1];
                     if (y > 0) {
                         // rear
-                        if (y > ymax) y = ymax;
-                        y = -100 * y / ymax;
+                        if (y > YMAX) y = YMAX;
+                        y = -100 * y / YMAX;
                     } else {
                         // front
-                        if (y < (-1 * ymax)) y = -1 * ymax;
-                        y = -100 * y / ymax;
+                        if (y < (-1 * YMAX)) y = -1 * YMAX;
+                        y = -100 * y / YMAX;
                     }
                     // averaging
-                    if (yave.size() > aveNumber) yave.remove(0);
+                    if (yave.size() > AVENUM) yave.remove(0);
                     yave.add(y);
                     y = 0;
                     for (i = 0; i < yave.size(); i++) {
@@ -230,8 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
         button_close.setOnClickListener(v -> {
             Log.d("BT", "Button_close");
-            if(sp.isOpened())
-            {
+            if (sp.isOpened()) {
                 sp.close();
                 threadEN = false;
                 textView1.setText("Success to close.");
@@ -313,8 +312,8 @@ public class MainActivity extends AppCompatActivity {
         List<Byte> bData = new CopyOnWriteArrayList<>();
 
         byte bbuf, bbufL, bbufR;
-        double deadzone = 20;       // %
-        double steeringMode = 35;   // %
+        double deadzone = 20;           // %
+        double steeringMode = 35;       // %
         double contributionRatio = 35;  // %
 
         bData.add((byte) 0xff);
