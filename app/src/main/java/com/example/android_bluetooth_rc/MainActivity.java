@@ -68,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
     private List<Double> yave;
     private int aveNumber = 10;
 
+    // protocol
+    // header           0xff
+    // speed left       0~100
+    // speed right      0~100
+    // direction left   0,1:forward,2:back
+    // direction right  0,1:forward,2:back
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
                         x = x + xave.get(i);
                     }
                     xval = x / xave.size();
-
 
                     double y = event.values[1];
                     if (y > 0) {
@@ -194,12 +200,7 @@ public class MainActivity extends AppCompatActivity {
                         if (gmodeEN) {
                             calcMove();
                         }
-                        // protocol
-                        // header           0xff
-                        // speed left       0~100
-                        // speed right      0~100
-                        // direction left   0,1:forward,2:back
-                        // direction right  0,1:forward,2:back
+
                         if (sendData.size() == 5) {
                             dL = "*";
                             if (sendData.get(3) == 1)
@@ -331,12 +332,12 @@ public class MainActivity extends AppCompatActivity {
                 bData.add(bbuf);
                 if (yval > 0) {
                     // forward
-                    bData.add((byte) 2);
-                    bData.add((byte) 2);
+                    bData.add((byte) 1);
+                    bData.add((byte) 1);
                 } else {
                     // back
-                    bData.add((byte) 1);
-                    bData.add((byte) 1);
+                    bData.add((byte) 2);
+                    bData.add((byte) 2);
                 }
             }
 
@@ -347,38 +348,38 @@ public class MainActivity extends AppCompatActivity {
                 if (yval > 0) {
                     if (xval > 0) {
                         // forward-left
-                        bbufR = bbuf;
                         bbufL = (byte) (abs(speedmax * yval / 100) * ((contributionRatio * (000 - abs(speedmax * xval / 100)) / 100) + (100 - contributionRatio)) / 100);
-                        bData.add(bbufR);
+                        bbufR = bbuf;
                         bData.add(bbufL);
-                        bData.add((byte) 2);
-                        bData.add((byte) 2);
+                        bData.add(bbufR);
+                        bData.add((byte) 1);
+                        bData.add((byte) 1);
                     } else {
                         // forward-right
                         bbufL = bbuf;
                         bbufR = (byte) (abs(speedmax * yval / 100) * ((contributionRatio * (000 - abs(speedmax * xval / 100)) / 100) + (100 - contributionRatio)) / 100);
-                        bData.add(bbufR);
                         bData.add(bbufL);
-                        bData.add((byte) 2);
-                        bData.add((byte) 2);
+                        bData.add(bbufR);
+                        bData.add((byte) 1);
+                        bData.add((byte) 1);
                     }
                 } else {
                     if (xval > 0) {
                         // back-left
-                        bbufR = bbuf;
                         bbufL = (byte) (abs(speedmax * yval / 100) * ((contributionRatio * (000 - abs(speedmax * xval / 100)) / 100) + (100 - contributionRatio)) / 100);
-                        bData.add(bbufR);
+                        bbufR = bbuf;
                         bData.add(bbufL);
-                        bData.add((byte) 1);
-                        bData.add((byte) 1);
+                        bData.add(bbufR);
+                        bData.add((byte) 2);
+                        bData.add((byte) 2);
                     } else {
                         // back-right
                         bbufL = bbuf;
                         bbufR = (byte) (abs(speedmax * yval / 100) * ((contributionRatio * (000 - abs(speedmax * xval / 100)) / 100) + (100 - contributionRatio)) / 100);
-                        bData.add(bbufR);
                         bData.add(bbufL);
-                        bData.add((byte) 1);
-                        bData.add((byte) 1);
+                        bData.add(bbufR);
+                        bData.add((byte) 2);
+                        bData.add((byte) 2);
                     }
                 }
             } else {
