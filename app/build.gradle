@@ -20,7 +20,7 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-    buildToolsVersion = '30.0.2'
+    namespace 'com.example.android_bluetooth_rc'
 }
 
 dependencies {
